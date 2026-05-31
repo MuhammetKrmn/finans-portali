@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: finansportal-backend
+
+  # -- Virtual Threads (Java 21) ----------------------------------
+  threads:
+    virtual:
+      enabled: true           # tum HTTP istekleri virtual thread uzerinde calisir
+
+  # -- Veritabani -------------------------------------------------
+  datasource:
+    url: jdbc:postgresql://localhost:5433/finansportal
+    username: admin
+    password: secret123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10   # virtual thread ile 10 yeterli
+      minimum-idle: 5
+
+  # -- JPA / Hibernate --------------------------------------------
+  jpa:
+    hibernate:
+      ddl-auto: validate      # Flyway tablolari yonetir, Hibernate sadece dogrular
+    show-sql: true            # gelistirmede SQL'leri goster
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_batch_fetch_size: 10
+
+  # -- Flyway -----------------------------------------------------
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+
+# -- Sunucu -------------------------------------------------------
+server:
+  port: 8080
+
+# -- Loglama ------------------------------------------------------
+logging:
+  level:
+    com.finansportal: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
